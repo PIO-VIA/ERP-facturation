@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  scylla:
+    image: scylladb/scylla:latest
+    container_name: scylla
+    ports:
+      - "9042:9042"   # Port CQL
+    command: --smp 1 --memory 512M --overprovisioned 1
+    networks:
+      - backend
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
