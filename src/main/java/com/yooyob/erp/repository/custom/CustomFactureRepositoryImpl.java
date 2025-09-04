@@ -120,21 +120,32 @@ public class CustomFactureRepositoryImpl implements CustomFactureRepository {
     public List<Map<String, Object>> getTopClientsByChiffreAffaires(int limit) {
         List<Facture> factures = cassandraTemplate.select(Query.empty(), Facture.class);
 
-        return factures.stream()
+        // Group invoices by client
+        Map<Map<String, Object>, List<Facture>> facturesParClient = factures.stream()
                 .filter(f -> f.getEtat() == StatutFacture.PAYE || f.getEtat() == StatutFacture.PARTIELLEMENT_PAYE)
                 .collect(Collectors.groupingBy(
-                        f -> Map.of("idClient", f.getIdClient(), "nomClient", f.getNomClient()),
-                        Collectors.reducing(BigDecimal.ZERO, Facture::getMontantTotal, BigDecimal::add)
-                ))
-                .entrySet()
-                .stream()
-                .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
-                .limit(limit)
+                        f -> Map.of("idClient", f.getIdClient(), "nomClient", f.getNomClient())
+                ));
+
+        // Process the grouped invoices to calculate stats
+        return facturesParClient.entrySet().stream()
                 .map(entry -> {
-                    Map<String, Object> clientData = new HashMap<>(entry.getKey());
-                    clientData.put("chiffreAffaires", entry.getValue());
+                    Map<String, Object> clientInfo = entry.getKey();
+                    List<Facture> clientFactures = entry.getValue();
+
+                    BigDecimal chiffreAffaires = clientFactures.stream()
+                            .map(Facture::getMontantTotal)
+                            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+                    long nombreFactures = clientFactures.size();
+
+                    Map<String, Object> clientData = new HashMap<>(clientInfo);
+                    clientData.put("chiffreAffaires", chiffreAffaires);
+                    clientData.put("nombreFactures", nombreFactures);
                     return clientData;
                 })
+                .sorted((m1, m2) -> ((BigDecimal) m2.get("chiffreAffaires")).compareTo((BigDecimal) m1.get("chiffreAffaires")))
+                .limit(limit)
                 .collect(Collectors.toList());
     }
 

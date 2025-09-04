@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmation de Paiement</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 300;
+        }
+        .success-icon {
+            font-size: 60px;
+            margin-bottom: 10px;
+        }
+        .content {
+            padding: 30px;
+        }
+        .paiement-info {
+            background-color: #d4edda;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #28a745;
+        }
+        .paiement-info h2 {
+            color: #155724;
+            margin-top: 0;
+            font-size: 20px;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid #c3e6cb;
+        }
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        .label {
+            font-weight: 600;
+            color: #155724;
+        }
+        .value {
+            color: #155724;
+        }
+        .montant {
+            font-size: 24px;
+            font-weight: bold;
+            color: #28a745;
+            text-align: center;
+            background-color: #ffffff;
+            border: 2px solid #28a745;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .facture-info {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #6c757d;
+        }
+        .facture-info h3 {
+            color: #495057;
+            margin-top: 0;
+            font-size: 18px;
+        }
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 25px;
+            margin: 20px 0;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #6c757d;
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        @media (max-width: 600px) {
+            .info-row {
+                flex-direction: column;
+            }
+            .label, .value {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="success-icon">✅</div>
+        <h1>Paiement Confirmé</h1>
+        <p>Merci pour votre règlement</p>
+    </div>
+
+    <div class="content">
+        <p>Cher client,</p>
+
+        <p>Nous avons bien reçu votre paiement. Nous vous remercions pour votre promptitude.</p>
+
+        <div class="paiement-info">
+            <h2>💳 Détails du Paiement</h2>
+
+            <div class="info-row">
+                <span class="label">Date de paiement :</span>
+                <span class="value" th:text="${#temporals.format(datePaiement, 'dd/MM/yyyy')}">01/01/2025</span>
+            </div>
+
+            <div class="info-row">
+                <span class="label">Mode de paiement :</span>
+                <span class="value" th:text="${modePaiement}">Virement</span>
+            </div>
+
+            <div class="info-row" th:if="${paiement.memo}">
+                <span class="label">Référence :</span>
+                <span class="value" th:text="${paiement.memo}">REF-12345</span>
+            </div>
+        </div>
+
+        <div class="montant">
+            💰 Montant Payé : <span th:text="${#numbers.formatDecimal(montant, 0, 2)} + ' €'">1,250.00 €</span>
+        </div>
+
+        <div class="facture-info" th:if="${facture}">
+            <h3>📋 Facture Associée</h3>
+
+            <div class="info-row">
+                <span class="label">Numéro :</span>
+                <span class="value" th:text="${facture.numeroFacture}">FAC-001</span>
+            </div>
+
+            <div class="info-row">
+                <span class="label">Montant restant :</span>
+                <span class="value" th:text="${#numbers.formatDecimal(facture.montantRestant, 0, 2)} + ' €'">0,00 €</span>
+            </div>
+
+            <div class="info-row">
+                <span class="label">Statut :</span>
+                <span class="value" th:text="${facture.etat.libelle}">Payé</span>
+            </div>
+        </div>
+
+        <div style="background-color: #d1ecf1; border-left: 4px solid #17a2b8; padding: 15px; margin: 20px 0; border-radius: 4px;">
+            <h3 style="margin-top: 0; color: #0c5460;">ℹ️ Informations utiles :</h3>
+            <ul style="margin: 0; padding-left: 20px; color: #0c5460;">
+                <li>Ce paiement a été enregistré dans nos systèmes</li>
+                <li>Vous recevrez un reçu de paiement par email séparément</li>
+                <li>Conservez ce mail comme justificatif de paiement</li>
+            </ul>
+        </div>
+
+        <div style="text-align: center;">
+            <a href="#" class="cta-button" th:href="${baseUrl + '/compte'}">
+                📊 Consulter mon compte
+            </a>
+        </div>
+
+        <p>Merci de votre confiance,<br>
+            <strong>L'équipe YooYob ERP</strong></p>
+    </div>
+
+    <div class="footer">
+        <p>📧 Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
+        <p>💼 YooYob ERP - Solution de gestion d'entreprise</p>
+        <p>📞 Support client : support@yooyob.com</p>
+    </div>
+</div>
+</body>
+</html>

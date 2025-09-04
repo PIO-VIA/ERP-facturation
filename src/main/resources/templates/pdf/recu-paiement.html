@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Reçu de Paiement</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 20mm;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            display: table;
+            width: 100%;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #28a745;
+            padding-bottom: 15px;
+        }
+
+        .header-left, .header-right {
+            display: table-cell;
+            vertical-align: top;
+            width: 50%;
+        }
+
+        .header-right {
+            text-align: right;
+        }
+
+        .logo {
+            max-width: 150px;
+            max-height: 60px;
+        }
+
+        .company-info {
+            margin-top: 10px;
+        }
+
+        .company-info h1 {
+            font-size: 24px;
+            color: #28a745;
+            margin: 0;
+            font-weight: bold;
+        }
+
+        .company-info p {
+            margin: 2px 0;
+            font-size: 11px;
+        }
+
+        .recu-title {
+            font-size: 28px;
+            color: #28a745;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .recu-info {
+            font-size: 11px;
+            margin-top: 5px;
+        }
+
+        .success-badge {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 20px;
+            padding: 10px 20px;
+            text-align: center;
+            margin: 20px 0;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .client-info {
+            display: table;
+            width: 100%;
+            margin: 30px 0;
+        }
+
+        .client-left, .client-right {
+            display: table-cell;
+            vertical-align: top;
+            width: 50%;
+        }
+
+        .client-box {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin-right: 20px;
+        }
+
+        .client-box h3 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: #28a745;
+            border-bottom: 1px solid #28a745;
+            padding-bottom: 5px;
+        }
+
+        .client-box p {
+            margin: 3px 0;
+            font-size: 11px;
+        }
+
+        .paiement-details {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+            padding: 15px;
+        }
+
+        .paiement-details h3 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: #155724;
+        }
+
+        .detail-row {
+            display: table;
+            width: 100%;
+            margin: 8px 0;
+        }
+
+        .detail-label, .detail-value {
+            display: table-cell;
+            padding: 3px 0;
+        }
+
+        .detail-label {
+            font-weight: bold;
+            width: 50%;
+            color: #155724;
+        }
+
+        .detail-value {
+            text-align: right;
+            color: #155724;
+        }
+
+        .montant-paye {
+            background-color: #28a745;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 10px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .facture-info {
+            background-color: #e9ecef;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .facture-info h3 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: #495057;
+            border-bottom: 1px solid #6c757d;
+            padding-bottom: 5px;
+        }
+
+        .facture-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 11px;
+        }
+
+        .facture-table th {
+            background-color: #6c757d;
+            color: white;
+            padding: 10px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .facture-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .signature-section {
+            display: table;
+            width: 100%;
+            margin-top: 50px;
+        }
+
+        .signature-left, .signature-right {
+            display: table-cell;
+            vertical-align: top;
+            width: 50%;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .signature-box {
+            border: 2px dashed #6c757d;
+            border-radius: 5px;
+            padding: 30px 20px;
+            margin: 10px;
+        }
+
+        .signature-box h4 {
+            margin: 0 0 10px 0;
+            color: #495057;
+        }
+
+        .signature-box p {
+            margin: 0;
+            font-size: 10px;
+            color: #6c757d;
+        }
+
+        .legal-mentions {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            font-size: 10px;
+        }
+
+        .legal-mentions h3 {
+            margin: 0 0 10px 0;
+            font-size: 12px;
+            color: #495057;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background-color: #28a745;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-size: 10px;
+        }
+
+        .clearfix::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <div class="header-left">
+        <img th:if="${logoPath}" th:src="${logoPath}" alt="Logo" class="logo" />
+        <div class="company-info">
+            <h1>YooYob ERP</h1>
+            <p><strong>123 Rue de l'Exemple</strong></p>
+            <p>75001 Paris, France</p>
+            <p>Tél: +33 1 23 45 67 89</p>
+            <p>Email: contact@yooyob.com</p>
+            <p>SIRET: 123 456 789 00012</p>
+        </div>
+    </div>
+    <div class="header-right">
+        <h2 class="recu-title">REÇU DE PAIEMENT</h2>
+        <div class="recu-info">
+            <p><strong>N° Reçu: </strong>REC-<span th:text="${paiement.idPaiement}">001</span></p>
+            <p><strong>Date: </strong><span th:text="${#temporals.format(generatedDate, 'dd/MM/yyyy HH:mm')}">01/01/2025 10:30</span></p>
+        </div>
+    </div>
+</div>
+
+<div class="success-badge">
+    ✅ PAIEMENT REÇU ET ENREGISTRÉ
+</div>
+
+<div class="client-info">
+    <div class="client-left">
+        <div class="client-box">
+            <h3>👤 Client</h3>
+            <p><strong th:text="${client.username}">Nom du Client</strong></p>
+            <p th:text="${client.adresse}">123 Rue du Client</p>
+            <p th:if="${client.email}">✉️ <span th:text="${client.email}">client@email.com</span></p>
+            <p th:if="${client.telephone}">📞 <span th:text="${client.telephone}">01 23 45 67 89</span></p>
+        </div>
+    </div>
+    <div class="client-right">
+        <div class="paiement-details">
+            <h3>💳 Détails du Paiement</h3>
+            <div class="detail-row">
+                <div class="detail-label">Date de paiement:</div>
+                <div class="detail-value" th:text="${datePaiementFormatted}">01/01/2025</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Mode de paiement:</div>
+                <div class="detail-value" th:text="${paiement.modePaiement.libelle}">Virement</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Journal:</div>
+                <div class="detail-value" th:text="${paiement.journal}">VIR</div>
+            </div>
+            <div class="detail-row" th:if="${paiement.memo}">
+                <div class="detail-label">Référence:</div>
+                <div class="detail-value" th:text="${paiement.memo}">REF-12345</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="montant-paye">
+    💰 MONTANT PAYÉ: <span th:text="${#numbers.formatDecimal(paiement.montant, 0, 2)} + ' €'">1 200,00 €</span>
+</div>
+
+<div class="facture-info" th:if="${facture}">
+    <h3>📋 Facture Associée</h3>
+    <table class="facture-table">
+        <thead>
+        <tr>
+            <th>Numéro Facture</th>
+            <th>Date</th>
+            <th>Montant Total</th>
+            <th>Montant Restant</th>
+            <th>Statut</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td th:text="${facture.numeroFacture}">FAC-001</td>
+            <td th:text="${#temporals.format(facture.dateFacturation, 'dd/MM/yyyy')}">15/12/2024</td>
+            <td th:text="${#numbers.formatDecimal(facture.montantTotal, 0, 2)} + ' €'">1 500,00 €</td>
+            <td th:text="${#numbers.formatDecimal(facture.montantRestant, 0, 2)} + ' €'">300,00 €</td>
+            <td>
+                        <span th:text="${facture.etat.libelle}"
+                              th:style="${facture.etat.name() == 'PAYE'} ? 'color: #28a745; font-weight: bold;' :
+                                        ${facture.etat.name() == 'PARTIELLEMENT_PAYE'} ? 'color: #ffc107; font-weight: bold;' : 'color: #6c757d;'">
+                            Payé
+                        </span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="signature-section">
+    <div class="signature-left">
+        <div class="signature-box">
+            <h4>Signature du Client</h4>
+            <p>Date et signature</p>
+            <div style="height: 60px;"></div>
+        </div>
+    </div>
+</div>
+
+<div class="legal-mentions">
+    <h3>📋 Mentions Légales</h3>
+    <p><strong>Validité:</strong> Ce reçu de paiement fait foi du règlement de la somme mentionnée ci-dessus.</p>
+    <p><strong>Conservation:</strong> Il est recommandé de conserver ce document pour vos archives comptables.</p>
+    <p><strong>Réclamations:</strong> Toute réclamation concernant ce paiement doit être formulée dans les 8 jours suivant la date d'émission.</p>
+    <p><strong>Entreprise:</strong> YooYob ERP - SIRET: 123 456 789 00012 - APE: 6201Z</p>
+</div>
+
+<div class="footer">
+    <p>YooYob ERP - Solution de gestion d'entreprise | Document généré le <span th:text="${#temporals.format(generatedDate, 'dd/MM/yyyy à HH:mm')}">01/01/2025 à 10:30</span></p>
+</div>
+</body>
+</html>>
+</div>
+</div>
+<div class="signature-right">
+    <div class="signature-box">
+        <h4>Cachet de l'Entreprise</h4>
+        <p>YooYob ERP</p>
+        <div style="height: 60px;"></div

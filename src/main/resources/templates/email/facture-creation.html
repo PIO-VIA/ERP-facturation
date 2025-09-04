@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nouvelle Facture</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 300;
+        }
+        .content {
+            padding: 30px;
+        }
+        .facture-info {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #667eea;
+        }
+        .facture-info h2 {
+            color: #667eea;
+            margin-top: 0;
+            font-size: 20px;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        .label {
+            font-weight: 600;
+            color: #495057;
+        }
+        .value {
+            color: #6c757d;
+        }
+        .montant {
+            font-size: 24px;
+            font-weight: bold;
+            color: #28a745;
+            text-align: center;
+            background-color: #d4edda;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 25px;
+            margin: 20px 0;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #6c757d;
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        @media (max-width: 600px) {
+            .info-row {
+                flex-direction: column;
+            }
+            .label, .value {
+                text-align: left;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>📧 Nouvelle Facture</h1>
+        <p>YooYob ERP - Système de Facturation</p>
+    </div>
+
+    <div class="content">
+        <p>Bonjour <strong th:text="${client}">Client</strong>,</p>
+
+        <p>Nous vous informons qu'une nouvelle facture a été générée pour votre compte.</p>
+
+        <div class="facture-info">
+            <h2>📋 Détails de la Facture</h2>
+
+            <div class="info-row">
+                <span class="label">Numéro de facture :</span>
+                <span class="value" th:text="${numeroFacture}">FAC-001</span>
+            </div>
+
+            <div class="info-row">
+                <span class="label">Date de facturation :</span>
+                <span class="value" th:text="${#temporals.format(dateFacturation, 'dd/MM/yyyy')}">01/01/2025</span>
+            </div>
+
+            <div class="info-row">
+                <span class="label">Date d'échéance :</span>
+                <span class="value" th:text="${#temporals.format(dateEcheance, 'dd/MM/yyyy')}">31/01/2025</span>
+            </div>
+
+            <div class="info-row">
+                <span class="label">Statut :</span>
+                <span class="value" th:text="${facture.etat.libelle}">Envoyé</span>
+            </div>
+        </div>
+
+        <div class="montant">
+            💰 Montant Total : <span th:text="${#numbers.formatDecimal(montantTotal, 0, 2)} + ' €'">1,250.00 €</span>
+        </div>
+
+        <div style="text-align: center;">
+            <a href="#" class="cta-button" th:href="${baseUrl + '/factures/' + facture.idFacture}">
+                🔍 Voir la facture en ligne
+            </a>
+        </div>
+
+        <div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin: 20px 0; border-radius: 4px;">
+            <h3 style="margin-top: 0; color: #856404;">⚠️ Informations importantes :</h3>
+            <ul style="margin: 0; padding-left: 20px; color: #856404;">
+                <li>Cette facture doit être réglée avant le <strong th:text="${#temporals.format(dateEcheance, 'dd/MM/yyyy')}">31/01/2025</strong></li>
+                <li>Conservez ce numéro de facture pour vos références : <strong th:text="${numeroFacture}">FAC-001</strong></li>
+                <li>En cas de questions, n'hésitez pas à nous contacter</li>
+            </ul>
+        </div>
+
+        <p>Cordialement,<br>
+            <strong>L'équipe YooYob ERP</strong></p>
+    </div>
+
+    <div class="footer">
+        <p>📧 Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
+        <p>💼 YooYob ERP - Solution de gestion d'entreprise</p>
+        <p>🌐 <a href="#" th:href="${baseUrl}">Accéder à votre espace client</a></p>
+    </div>
+</div>
+</body>
+</html>
