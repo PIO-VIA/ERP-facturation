@@ -4,6 +4,8 @@ import com.yooyob.erp.model.entity.Paiement;
 import com.yooyob.erp.model.enums.TypePaiement;
 import org.springframework.data.cassandra.repository.CassandraRepository;
 import org.springframework.data.cassandra.repository.Query;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -13,6 +15,8 @@ import java.util.UUID;
 
 @Repository
 public interface PaiementRepository extends CassandraRepository<Paiement, UUID> {
+
+    Page<Paiement> findAll(Pageable pageable);
 
     List<Paiement> findByIdClient(UUID idClient);
 

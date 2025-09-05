@@ -3,6 +3,8 @@ package com.yooyob.erp.repository;
 import com.yooyob.erp.model.entity.Taxes;
 import org.springframework.data.cassandra.repository.CassandraRepository;
 import org.springframework.data.cassandra.repository.Query;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -12,6 +14,8 @@ import java.util.UUID;
 
 @Repository
 public interface TaxesRepository extends CassandraRepository<Taxes, UUID> {
+
+    Page<Taxes> findAll(Pageable pageable);
 
     Optional<Taxes> findByNomTaxe(String nomTaxe);
 

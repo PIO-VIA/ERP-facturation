@@ -202,7 +202,7 @@ public class TaxeServiceImpl implements TaxeService {
     public TaxeResponse updateCalculTaxe(UUID id, BigDecimal nouveauTaux) {
         log.info("Mise à jour du taux de calcul de la taxe {} à: {}", id, nouveauTaux);
 
-        if (!NumberUtil.isNonNegativeAmount(nouveauTaux)) {
+        if (!NumberUtil.isNonNegative(nouveauTaux)) {
             throw new ValidationException("Le taux de calcul doit être positif ou nul");
         }
 
@@ -225,7 +225,7 @@ public class TaxeServiceImpl implements TaxeService {
     public TaxeResponse updateMontantTaxe(UUID id, BigDecimal nouveauMontant) {
         log.info("Mise à jour du montant de la taxe {} à: {}", id, nouveauMontant);
 
-        if (!NumberUtil.isNonNegativeAmount(nouveauMontant)) {
+        if (!NumberUtil.isNonNegative(nouveauMontant)) {
             throw new ValidationException("Le montant de la taxe doit être positif ou nul");
         }
 
@@ -258,7 +258,7 @@ public class TaxeServiceImpl implements TaxeService {
     public BigDecimal calculerMontantTaxe(UUID taxeId, BigDecimal montantHT) {
         log.debug("Calcul du montant de taxe {} pour le montant HT: {}", taxeId, montantHT);
 
-        if (!NumberUtil.isNonNegativeAmount(montantHT)) {
+        if (!NumberUtil.isNonNegative(montantHT)) {
             return BigDecimal.ZERO;
         }
 
@@ -284,7 +284,7 @@ public class TaxeServiceImpl implements TaxeService {
     public BigDecimal calculerMontantHT(BigDecimal montantTTC, UUID taxeId) {
         log.debug("Calcul du montant HT pour TTC: {} avec taxe: {}", montantTTC, taxeId);
 
-        if (!NumberUtil.isNonNegativeAmount(montantTTC)) {
+        if (!NumberUtil.isNonNegative(montantTTC)) {
             return BigDecimal.ZERO;
         }
 
@@ -304,7 +304,7 @@ public class TaxeServiceImpl implements TaxeService {
     public BigDecimal appliquerMultiplesTaxes(BigDecimal montantHT, List<UUID> taxeIds) {
         log.debug("Application de multiples taxes au montant HT: {}", montantHT);
 
-        if (!NumberUtil.isNonNegativeAmount(montantHT) || ValidationUtil.isEmpty(taxeIds)) {
+        if (!NumberUtil.isNonNegative(montantHT) || ValidationUtil.isEmpty(taxeIds)) {
             return BigDecimal.ZERO;
         }
 
@@ -328,7 +328,7 @@ public class TaxeServiceImpl implements TaxeService {
 
         Map<UUID, BigDecimal> repartition = new HashMap<>();
 
-        if (!NumberUtil.isNonNegativeAmount(montantHT) || ValidationUtil.isEmpty(taxeIds)) {
+        if (!NumberUtil.isNonNegative(montantHT) || ValidationUtil.isEmpty(taxeIds)) {
             return repartition;
         }
 
@@ -440,7 +440,7 @@ public class TaxeServiceImpl implements TaxeService {
             throw new ValidationException("Le nom de la taxe doit contenir entre 2 et 100 caractères");
         }
 
-        if (!NumberUtil.isNonNegativeAmount(request.getCalculTaxe())) {
+        if (!NumberUtil.isNonNegative(request.getCalculTaxe())) {
             throw new ValidationException("Le calcul de la taxe doit être positif ou nul");
         }
 
@@ -469,7 +469,7 @@ public class TaxeServiceImpl implements TaxeService {
         }
 
         if (request.getCalculTaxe() != null) {
-            if (!NumberUtil.isNonNegativeAmount(request.getCalculTaxe())) {
+            if (!NumberUtil.isNonNegative(request.getCalculTaxe())) {
                 throw new ValidationException("Le calcul de la taxe doit être positif ou nul");
             }
             if (!ValidationUtil.isValidTaxRate(request.getCalculTaxe())) {

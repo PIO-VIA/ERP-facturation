@@ -4,6 +4,8 @@ import com.yooyob.erp.model.entity.Fournisseur;
 import com.yooyob.erp.model.enums.TypeClient;
 import org.springframework.data.cassandra.repository.CassandraRepository;
 import org.springframework.data.cassandra.repository.Query;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.UUID;
 
 @Repository
 public interface FournisseurRepository extends CassandraRepository<Fournisseur, UUID> {
+
+    Page<Fournisseur> findAll(Pageable pageable);
 
     Optional<Fournisseur> findByUsername(String username);
 

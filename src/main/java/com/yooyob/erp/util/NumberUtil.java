@@ -69,6 +69,13 @@ public class NumberUtil {
     }
 
     /**
+     * Vérifie si un BigDecimal est positif ou nul
+     */
+    public static boolean isNonNegative(BigDecimal value) {
+        return value != null && value.compareTo(BigDecimal.ZERO) >= 0;
+    }
+
+    /**
      * Retourne la valeur absolue d'un BigDecimal
      */
     public static BigDecimal abs(BigDecimal value) {

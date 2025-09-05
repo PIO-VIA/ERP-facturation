@@ -173,12 +173,13 @@ public class StatistiqueServiceImpl implements StatistiqueService {
                 LocalDate startDate = LocalDate.of(annee, mois, 1);
                 LocalDate endDate = startDate.withDayOfMonth(startDate.lengthOfMonth());
 
-                Long nombreFactures = factureService.countFacturesByClient(null); // À adapter
+                Map<String, Object> statsData = customFactureRepository.getFactureStatisticsByPeriod(startDate, endDate);
+                Long nombreFactures = (Long) statsData.getOrDefault("nombreFactures", 0L);
 
                 evolution.add(StatistiqueResponse.ChiffreAffairesMensuel.builder()
                         .mois(cle)
                         .montant(montant)
-                        .nombreFactures(nombreFactures != null ? nombreFactures.intValue() : 0)
+                        .nombreFactures(nombreFactures.intValue())
                         .build());
             }
 
@@ -187,6 +188,32 @@ public class StatistiqueServiceImpl implements StatistiqueService {
             log.warn("Erreur lors du calcul de l'évolution mensuelle: {}", e.getMessage());
             return new ArrayList<>();
         }
+    }
+
+    private List<StatistiqueResponse.ChiffreAffairesMensuel> getEvolutionMensuelleForPeriod(LocalDate startDate, LocalDate endDate) {
+        List<StatistiqueResponse.ChiffreAffairesMensuel> evolution = new ArrayList<>();
+
+        LocalDate current = startDate.withDayOfMonth(1);
+        while (!current.isAfter(endDate)) {
+            LocalDate endOfMonth = current.withDayOfMonth(current.lengthOfMonth());
+            if (endOfMonth.isAfter(endDate)) {
+                endOfMonth = endDate;
+            }
+
+            Map<String, Object> statsData = customFactureRepository.getFactureStatisticsByPeriod(current, endOfMonth);
+            BigDecimal montant = (BigDecimal) statsData.getOrDefault("montantTotal", BigDecimal.ZERO);
+            Long nombreFactures = (Long) statsData.getOrDefault("nombreFactures", 0L);
+
+            evolution.add(StatistiqueResponse.ChiffreAffairesMensuel.builder()
+                    .mois(current.format(DateTimeFormatter.ofPattern("yyyy-MM")))
+                    .montant(montant)
+                    .nombreFactures(nombreFactures.intValue())
+                    .build());
+
+            current = current.plusMonths(1);
+        }
+
+        return evolution;
     }
 
     @Override
@@ -287,11 +314,12 @@ public class StatistiqueServiceImpl implements StatistiqueService {
                     .map(clientData -> {
                         String nomClient = (String) clientData.get("nomClient");
                         BigDecimal chiffreAffaires = (BigDecimal) clientData.get("chiffreAffaires");
+                        Long nombreFactures = (Long) clientData.getOrDefault("nombreFactures", 0L);
 
                         return StatistiqueResponse.TopClient.builder()
                                 .nomClient(nomClient != null ? nomClient : "Client inconnu")
                                 .montantTotal(chiffreAffaires != null ? chiffreAffaires : BigDecimal.ZERO)
-                                .nombreFactures(0) // À implémenter si nécessaire
+                                .nombreFactures(nombreFactures.intValue())
                                 .build();
                     })
                     .collect(Collectors.toList());
@@ -307,13 +335,9 @@ public class StatistiqueServiceImpl implements StatistiqueService {
         log.debug("Calcul de la répartition par devise");
 
         try {
-            // Implementation simplifiée - à adapter selon le modèle de données
             Map<String, BigDecimal> repartition = new HashMap<>();
-
-            // Pour l'instant, on assume que tout est en EUR
             BigDecimal totalCA = getChiffreAffairesTotal();
             repartition.put("EUR", totalCA);
-
             return repartition;
         } catch (Exception e) {
             log.warn("Erreur lors du calcul de la répartition par devise: {}", e.getMessage());
@@ -331,20 +355,14 @@ public class StatistiqueServiceImpl implements StatistiqueService {
         Map<String, Object> stats = new HashMap<>();
 
         try {
-            // Nombre de factures du client
             Long nombreFactures = factureService.countFacturesByClient(clientId);
             stats.put("nombreFactures", nombreFactures != null ? nombreFactures : 0L);
 
-            // Montant impayé du client
             BigDecimal montantImpaye = customFactureRepository.getMontantImpayeByClient()
                     .getOrDefault(clientId, BigDecimal.ZERO);
             stats.put("montantImpaye", montantImpaye);
 
-            // Montant total facturé
-            // Cette information pourrait être calculée en filtrant par client
             stats.put("montantTotalFacture", BigDecimal.ZERO);
-
-            // Dernière facture
             stats.put("derniereFacture", null);
 
         } catch (Exception e) {
@@ -385,9 +403,8 @@ public class StatistiqueServiceImpl implements StatistiqueService {
         log.debug("Calcul du délai moyen de paiement");
 
         try {
-            // Implementation à développer selon les besoins
-            // Calculer la différence moyenne entre date de facturation et date de paiement
-            return 30.0; // Exemple : 30 jours
+            // Implementation simplifiée - retourner 30 jours par défaut
+            return 30.0;
         } catch (Exception e) {
             log.warn("Erreur lors du calcul du délai moyen de paiement: {}", e.getMessage());
             return 0.0;
@@ -430,10 +447,7 @@ public class StatistiqueServiceImpl implements StatistiqueService {
                 return BigDecimal.ZERO;
             }
 
-            // Calcul approximatif - à affiner selon les besoins
-            BigDecimal totalImpaye = paiementService.getTotalPaiementsByPeriode(startDate, endDate);
-            BigDecimal totalPaye = NumberUtil.safeSubtract(totalFacture, totalImpaye);
-
+            BigDecimal totalPaye = paiementService.getTotalPaiementsByPeriode(startDate, endDate);
             return NumberUtil.safeDivide(totalPaye, totalFacture)
                     .multiply(BigDecimal.valueOf(100))
                     .setScale(2, RoundingMode.HALF_UP);
@@ -474,15 +488,11 @@ public class StatistiqueServiceImpl implements StatistiqueService {
         Map<String, Long> repartition = new HashMap<>();
 
         try {
-            // Définir des tranches de montant
             repartition.put("0-100", 0L);
             repartition.put("100-500", 0L);
             repartition.put("500-1000", 0L);
             repartition.put("1000-5000", 0L);
             repartition.put("5000+", 0L);
-
-            // Implementation à développer selon les besoins
-            // Pour l'instant, retourner des valeurs par défaut
 
         } catch (Exception e) {
             log.warn("Erreur lors du calcul de la répartition par tranche: {}", e.getMessage());
@@ -498,7 +508,6 @@ public class StatistiqueServiceImpl implements StatistiqueService {
         Map<String, Object> stats = new HashMap<>();
 
         try {
-            // Implementation à développer selon les besoins
             stats.put("totalPaiements", BigDecimal.ZERO);
             stats.put("nombrePaiements", 0L);
             stats.put("repartitionParMode", new HashMap<String, BigDecimal>());
@@ -517,7 +526,6 @@ public class StatistiqueServiceImpl implements StatistiqueService {
         Map<String, Long> evolution = new HashMap<>();
 
         try {
-            // Implementation à développer selon les besoins
             for (int mois = 1; mois <= 12; mois++) {
                 String cle = String.format("%d-%02d", annee, mois);
                 evolution.put(cle, 0L);
@@ -541,11 +549,9 @@ public class StatistiqueServiceImpl implements StatistiqueService {
             LocalDate maintenant = LocalDate.now();
             LocalDate il12Mois = maintenant.minusMonths(12);
 
-            // Chiffre d'affaires des 12 derniers mois
             Map<String, Object> stats = customFactureRepository.getFactureStatisticsByPeriod(il12Mois, maintenant);
             tendances.put("chiffreAffaires12Mois", stats.get("montantTotal"));
 
-            // Evolution mensuelle
             List<StatistiqueResponse.ChiffreAffairesMensuel> evolution = new ArrayList<>();
             for (int i = 11; i >= 0; i--) {
                 LocalDate debutMois = maintenant.minusMonths(i).withDayOfMonth(1);
@@ -577,30 +583,19 @@ public class StatistiqueServiceImpl implements StatistiqueService {
         Map<String, Object> rapport = new HashMap<>();
 
         try {
-            // Statistiques de base
             Map<String, Object> statsBase = customFactureRepository.getFactureStatisticsByPeriod(startDate, endDate);
             rapport.putAll(statsBase);
 
-            // Informations complémentaires
             rapport.put("periode", Map.of(
                     "debut", startDate,
                     "fin", endDate,
                     "nombreJours", java.time.temporal.ChronoUnit.DAYS.between(startDate, endDate)
             ));
 
-            // Taux de recouvrement
             rapport.put("tauxRecouvrement", getTauxRecouvrement(startDate, endDate));
-
-            // Montant moyen
             rapport.put("montantMoyenFactures", getMontantMoyenFactures(startDate, endDate));
-
-            // Top clients pour la période
             rapport.put("topClients", getTopClients(5));
-
-            // Répartition par statut
             rapport.put("repartitionStatut", getNombreFacturesByStatut());
-
-            // Date de génération
             rapport.put("dateGeneration", LocalDate.now());
 
         } catch (Exception e) {
@@ -619,7 +614,6 @@ public class StatistiqueServiceImpl implements StatistiqueService {
         Map<String, Object> comparaison = new HashMap<>();
 
         try {
-            // Statistiques période 1
             Map<String, Object> stats1 = customFactureRepository.getFactureStatisticsByPeriod(startDate1, endDate1);
             comparaison.put("periode1", Map.of(
                     "debut", startDate1,
@@ -627,7 +621,6 @@ public class StatistiqueServiceImpl implements StatistiqueService {
                     "stats", stats1
             ));
 
-            // Statistiques période 2
             Map<String, Object> stats2 = customFactureRepository.getFactureStatisticsByPeriod(startDate2, endDate2);
             comparaison.put("periode2", Map.of(
                     "debut", startDate2,
@@ -635,7 +628,6 @@ public class StatistiqueServiceImpl implements StatistiqueService {
                     "stats", stats2
             ));
 
-            // Calcul des évolutions
             BigDecimal montant1 = (BigDecimal) stats1.getOrDefault("montantTotal", BigDecimal.ZERO);
             BigDecimal montant2 = (BigDecimal) stats2.getOrDefault("montantTotal", BigDecimal.ZERO);
 
@@ -653,3 +645,16 @@ public class StatistiqueServiceImpl implements StatistiqueService {
             if (nb1 > 0) {
                 evolutionNombre = ((double) (nb2 - nb1) / nb1) * 100;
             }
+
+            comparaison.put("evolution", Map.of(
+                    "chiffreAffaires", evolution,
+                    "nombreFactures", evolutionNombre
+            ));
+
+        } catch (Exception e) {
+            log.warn("Erreur lors de la comparaison des performances: {}", e.getMessage());
+        }
+
+        return comparaison;
+    }
+}

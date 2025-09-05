@@ -3,6 +3,8 @@ package com.yooyob.erp.repository;
 import com.yooyob.erp.model.entity.Journal;
 import org.springframework.data.cassandra.repository.CassandraRepository;
 import org.springframework.data.cassandra.repository.Query;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -11,6 +13,8 @@ import java.util.UUID;
 
 @Repository
 public interface JournalRepository extends CassandraRepository<Journal, UUID> {
+
+    Page<Journal> findAll(Pageable pageable);
 
     Optional<Journal> findByNomJournal(String nomJournal);
 
