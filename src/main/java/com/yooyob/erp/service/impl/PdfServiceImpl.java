@@ -13,6 +13,7 @@ import com.yooyob.erp.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
@@ -30,7 +31,6 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class PdfServiceImpl implements PdfService {
 
@@ -38,6 +38,14 @@ public class PdfServiceImpl implements PdfService {
     private final FactureService factureService;
     private final PaiementService paiementService;
     private final ClientService clientService;
+
+    public PdfServiceImpl(SpringTemplateEngine templateEngine, @Lazy FactureService factureService, 
+                         PaiementService paiementService, ClientService clientService) {
+        this.templateEngine = templateEngine;
+        this.factureService = factureService;
+        this.paiementService = paiementService;
+        this.clientService = clientService;
+    }
 
     @Value("${app.pdf.output-directory}")
     private String outputDirectory;

@@ -12,6 +12,7 @@ import com.yooyob.erp.util.ValidationUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -31,7 +32,6 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 public class EmailServiceImpl implements EmailService {
 
@@ -40,6 +40,16 @@ public class EmailServiceImpl implements EmailService {
     private final FactureService factureService;
     private final PaiementService paiementService;
     private final ClientService clientService;
+
+    public EmailServiceImpl(JavaMailSender mailSender, SpringTemplateEngine templateEngine, 
+                           @Lazy FactureService factureService, PaiementService paiementService, 
+                           ClientService clientService) {
+        this.mailSender = mailSender;
+        this.templateEngine = templateEngine;
+        this.factureService = factureService;
+        this.paiementService = paiementService;
+        this.clientService = clientService;
+    }
 
     @Value("${app.email.from}")
     private String fromEmail;

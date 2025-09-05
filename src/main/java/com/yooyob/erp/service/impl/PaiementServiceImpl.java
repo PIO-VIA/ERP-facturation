@@ -17,6 +17,7 @@ import com.yooyob.erp.util.ValidationUtil;
 import com.yooyob.erp.util.NumberUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +31,6 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
 @Transactional
 public class PaiementServiceImpl implements PaiementService {
@@ -39,6 +39,14 @@ public class PaiementServiceImpl implements PaiementService {
     private final PaiementMapper paiementMapper;
     private final FactureService factureService;
     private final EmailService emailService;
+
+    public PaiementServiceImpl(PaiementRepository paiementRepository, PaiementMapper paiementMapper,
+                              @Lazy FactureService factureService, @Lazy EmailService emailService) {
+        this.paiementRepository = paiementRepository;
+        this.paiementMapper = paiementMapper;
+        this.factureService = factureService;
+        this.emailService = emailService;
+    }
 
     @Override
     public PaiementResponse createPaiement(PaiementCreateRequest request) {
