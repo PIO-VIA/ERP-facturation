@@ -38,8 +38,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.context.annotation.Lazy;
+
 @Service
-@RequiredArgsConstructor
 @Slf4j
 @Transactional
 public class FactureServiceImpl implements FactureService {
@@ -51,6 +52,16 @@ public class FactureServiceImpl implements FactureService {
     private final EmailService emailService;
     private final PdfService pdfService;
     private final CacheUtil cacheUtil;
+
+    public FactureServiceImpl(FactureRepository factureRepository, ClientRepository clientRepository, CustomFactureRepository customFactureRepository, FactureMapper factureMapper, @Lazy EmailService emailService, PdfService pdfService, CacheUtil cacheUtil) {
+        this.factureRepository = factureRepository;
+        this.clientRepository = clientRepository;
+        this.customFactureRepository = customFactureRepository;
+        this.factureMapper = factureMapper;
+        this.emailService = emailService;
+        this.pdfService = pdfService;
+        this.cacheUtil = cacheUtil;
+    }
 
     @Override
     public FactureResponse createFacture(FactureCreateRequest request) {

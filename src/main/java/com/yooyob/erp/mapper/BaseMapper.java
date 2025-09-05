@@ -7,10 +7,6 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Mapper(
-        componentModel = "spring",
-        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
-)
 public interface BaseMapper<E, CreateRequest, UpdateRequest, Response> {
 
     E toEntity(CreateRequest createRequest);

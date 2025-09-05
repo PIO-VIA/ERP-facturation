@@ -42,7 +42,8 @@ public class CustomFactureRepositoryImpl implements CustomFactureRepository {
         }
 
         if (dateStart != null && dateEnd != null) {
-            query = query.and(Criteria.where("date_facturation").gte(dateStart).lte(dateEnd));
+            query = query.and(Criteria.where("date_facturation").gte(dateStart));
+            query = query.and(Criteria.where("date_facturation").lte(dateEnd));
         }
 
         if (montantMin != null) {

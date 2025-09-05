@@ -76,5 +76,7 @@ public interface FactureMapper extends BaseMapper<Facture, FactureCreateRequest,
     @Mapping(target = "client", source = "client")
     @Mapping(target = "paiements", ignore = true)
     @Mapping(target = "totalPaiements", ignore = true)
-    FactureDetailsResponse toDetailsResponseWithClient(Facture facture, @Context Client client);
+    @Mapping(target = "createdAt", source = "facture.createdAt")
+    @Mapping(target = "updatedAt", source = "facture.updatedAt")
+    FactureDetailsResponse toDetailsResponseWithClient(Facture facture, Client client);
 }

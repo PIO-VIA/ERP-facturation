@@ -60,10 +60,7 @@ public class CassandraConfig extends AbstractCassandraConfiguration {
         );
     }
 
-    @Override
-    protected boolean getMetricsEnabled() {
-        return true;
-    }
+
 
     @Override
     public String[] getEntityBasePackages() {

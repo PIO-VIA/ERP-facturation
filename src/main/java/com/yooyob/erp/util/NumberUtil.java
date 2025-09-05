@@ -5,8 +5,7 @@ import lombok.experimental.UtilityClass;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.Locale;
+
 
 @UtilityClass
 public class NumberUtil {
@@ -266,7 +265,4 @@ public class NumberUtil {
         return sb.toString();
     }
 
-    /**
-     * Formate un nombre avec locale spécifique
-     */
-    public static String formatWithLoc
+}
