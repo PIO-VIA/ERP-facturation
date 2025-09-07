@@ -14,17 +14,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(authz -> authz
-                // Permet l'accès libre à Swagger UI
-                .requestMatchers("/dev/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                .requestMatchers("/v3/api-docs/**", "/swagger-resources/**").permitAll()
-                // Permet l'accès libre aux endpoints actuator pour le monitoring
-                .requestMatchers("/actuator/**").permitAll()
-                // Toutes les autres requêtes nécessitent une authentification
-                .anyRequest().authenticated()
-            );
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // Autorise absolument tout
+                .authorizeHttpRequests(authz -> authz.anyRequest().permitAll());
 
         return http.build();
     }

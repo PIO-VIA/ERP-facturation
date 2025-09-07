@@ -34,10 +34,6 @@
             font-size: 28px;
             font-weight: 300;
         }
-        .warning-icon {
-            font-size: 60px;
-            margin-bottom: 10px;
-        }
         .content {
             padding: 30px;
         }
@@ -166,7 +162,6 @@
 <body>
 <div class="container">
     <div class="header" th:classappend="${joursDeRetard != null and joursDeRetard > 0} ? 'urgent' : ''">
-        <div class="warning-icon" th:text="${joursDeRetard != null and joursDeRetard > 0} ? '🚨' : '⏰'">⏰</div>
         <h1 th:text="${joursDeRetard != null and joursDeRetard > 0} ? 'FACTURE EN RETARD' : 'Rappel de Paiement'">Rappel de Paiement</h1>
         <p th:text="${joursDeRetard != null and joursDeRetard > 0} ? 'Action immédiate requise' : 'Échéance approchant'">Échéance approchant</p>
     </div>
@@ -185,7 +180,7 @@
         </p>
 
         <div class="facture-info" th:classappend="${joursDeRetard != null and joursDeRetard > 0} ? 'urgent' : ''">
-            <h2>📋 Détails de la Facture</h2>
+            <h2>Détails de la Facture</h2>
 
             <div class="info-row">
                 <span class="label">Numéro de facture :</span>
@@ -204,11 +199,11 @@
         </div>
 
         <div class="montant">
-            💰 Montant À Régler : <span th:text="${#numbers.formatDecimal(montantRestant, 0, 2)} + ' €'">1,250.00 €</span>
+            Montant À Régler : <span th:text="${#numbers.formatDecimal(montantRestant, 0, 2)} + ' €'">1,250.00 €</span>
         </div>
 
         <div class="echeance-info" th:classappend="${joursDeRetard != null and joursDeRetard > 0} ? 'depassee' : (${joursAvantEcheance != null and joursAvantEcheance <= 3} ? 'proche' : '')">
-            <h3 style="margin-top: 0;" th:text="${joursDeRetard != null and joursDeRetard > 0} ? '🚨 Échéance Dépassée' : (${joursAvantEcheance != null and joursAvantEcheance <= 3} ? '⚠️ Échéance Proche' : 'ℹ️ Information')">ℹ️ Information</h3>
+            <h3 style="margin-top: 0;" th:text="${joursDeRetard != null and joursDeRetard > 0} ? 'Échéance Dépassée' : (${joursAvantEcheance != null and joursAvantEcheance <= 3} ? 'Échéance Proche' : 'Information')}">Information</h3>
             <p th:if="${joursDeRetard != null and joursDeRetard > 0}" style="margin: 0; font-weight: 600; color: #721c24;">
                 Cette facture était due le <span th:text="${#temporals.format(dateEcheance, 'dd/MM/yyyy')}">31/01/2025</span>.
                 Un règlement immédiat est nécessaire pour éviter des frais supplémentaires.
@@ -222,7 +217,7 @@
         </div>
 
         <div class="payment-methods">
-            <h3>💳 Moyens de Paiement Acceptés</h3>
+            <h3>Moyens de Paiement Acceptés</h3>
             <div class="payment-method">
                 <strong>Virement Bancaire</strong><br>
                 IBAN : FR76 1234 5678 9012 3456 7890 123<br>
@@ -231,7 +226,7 @@
             <div class="payment-method">
                 <strong>Chèque</strong><br>
                 À l'ordre de : YooYob ERP<br>
-                Adresse : 123 Rue de l'Exemple, 75001 Paris
+                Adresse : MELEN,  Yaounde 1
             </div>
             <div class="payment-method">
                 <strong>Paiement en ligne</strong><br>
@@ -241,12 +236,12 @@
 
         <div style="text-align: center;">
             <a href="#" class="cta-button" th:href="${baseUrl + '/factures/' + facture.idFacture + '/payer'}">
-                💳 Payer Maintenant
+                Payer Maintenant
             </a>
         </div>
 
         <div style="background-color: #e2e3e5; border-left: 4px solid #6c757d; padding: 15px; margin: 20px 0; border-radius: 4px;">
-            <h3 style="margin-top: 0; color: #495057;">📞 Besoin d'aide ?</h3>
+            <h3 style="margin-top: 0; color: #495057;">Besoin d'aide ?</h3>
             <p style="margin: 0; color: #495057;">
                 Si vous avez déjà effectué ce paiement ou si vous rencontrez des difficultés,
                 n'hésitez pas à nous contacter au <strong>01 23 45 67 89</strong> ou par email à
@@ -261,9 +256,9 @@
     </div>
 
     <div class="footer">
-        <p>📧 Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
-        <p>💼 YooYob ERP - Solution de gestion d'entreprise</p>
-        <p>📞 Support client : support@yooyob.com | ☎️ 01 23 45 67 89</p>
+        <p>Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
+        <p>YooYob ERP - Solution de gestion d'entreprise</p>
+        <p>Support client : support@yooyob.com | 01 23 45 67 89</p>
     </div>
 </div>
 </body>

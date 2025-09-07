@@ -8,54 +8,60 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
-            color: #333;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f4f4f4;
+            color: #333333;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f6f8;
         }
         .container {
+            max-width: 600px;
+            margin: 20px auto;
             background-color: #ffffff;
-            border-radius: 10px;
+            border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border: 1px solid #e5e5e5;
         }
         .header {
-            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-            color: white;
-            padding: 30px;
+            background: #28a745;
+            color: #ffffff;
             text-align: center;
+            padding: 30px 20px;
         }
+
         .header h1 {
             margin: 0;
-            font-size: 28px;
-            font-weight: 300;
+            font-size: 24px;
+            font-weight: 600;
         }
-        .success-icon {
-            font-size: 60px;
-            margin-bottom: 10px;
+        .header p {
+            margin: 5px 0 0;
+            font-size: 14px;
+            opacity: 0.9;
         }
         .content {
-            padding: 30px;
+            padding: 25px;
+        }
+        .content p {
+            margin: 10px 0;
         }
         .paiement-info {
-            background-color: #d4edda;
-            border-radius: 8px;
+            background-color: #f1f9f3;
+            border-radius: 6px;
             padding: 20px;
             margin: 20px 0;
             border-left: 4px solid #28a745;
         }
         .paiement-info h2 {
+            margin: 0 0 15px;
+            font-size: 18px;
             color: #155724;
-            margin-top: 0;
-            font-size: 20px;
         }
         .info-row {
             display: flex;
             justify-content: space-between;
-            margin: 10px 0;
             padding: 8px 0;
-            border-bottom: 1px solid #c3e6cb;
+            border-bottom: 1px solid #e0e6e2;
+            font-size: 14px;
         }
         .info-row:last-child {
             border-bottom: none;
@@ -68,140 +74,151 @@
             color: #155724;
         }
         .montant {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: bold;
             color: #28a745;
             text-align: center;
-            background-color: #ffffff;
-            border: 2px solid #28a745;
-            border-radius: 8px;
+            background-color: #e9f7ec;
+            border-radius: 6px;
             padding: 15px;
-            margin: 20px 0;
+            margin: 25px 0;
         }
         .facture-info {
-            background-color: #f8f9fa;
-            border-radius: 8px;
+            background-color: #f9fafc;
+            border-radius: 6px;
             padding: 20px;
             margin: 20px 0;
             border-left: 4px solid #6c757d;
         }
         .facture-info h3 {
+            margin: 0 0 15px;
+            font-size: 16px;
             color: #495057;
-            margin-top: 0;
-            font-size: 18px;
         }
         .cta-button {
             display: inline-block;
-            background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
-            color: white;
-            padding: 15px 30px;
+            background: #4A6CF7;
+            color: white !important;
+            padding: 14px 28px;
             text-decoration: none;
-            border-radius: 25px;
+            border-radius: 4px;
+            font-size: 15px;
+            font-weight: 600;
             margin: 20px 0;
-            text-align: center;
-            transition: transform 0.3s ease;
+            transition: background 0.3s ease;
         }
         .cta-button:hover {
-            transform: translateY(-2px);
+            background: #3953c6;
+        }
+        .alert-box {
+            background-color: #eaf7fb;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #0c5460;
         }
         .footer {
-            background-color: #f8f9fa;
+            background-color: #f4f6f8;
             padding: 20px;
             text-align: center;
-            font-size: 14px;
-            color: #6c757d;
+            font-size: 13px;
+            color: #777777;
+            border-top: 1px solid #e5e5e5;
         }
-        .footer p {
-            margin: 5px 0;
+        .footer a {
+            color: #4A6CF7;
+            text-decoration: none;
         }
         @media (max-width: 600px) {
             .info-row {
                 flex-direction: column;
+                align-items: flex-start;
             }
             .label, .value {
-                text-align: left;
+                display: block;
+                margin: 2px 0;
             }
         }
     </style>
 </head>
 <body>
 <div class="container">
+    <!-- HEADER -->
     <div class="header">
-        <div class="success-icon">✅</div>
-        <h1>Paiement Confirmé</h1>
+
+        <h1>Paiement confirmé</h1>
         <p>Merci pour votre règlement</p>
     </div>
 
+    <!-- CONTENT -->
     <div class="content">
-        <p>Cher client,</p>
+        <p>Bonjour <strong th:text="${client}">Client</strong>,</p>
+        <p>Nous confirmons la réception de votre paiement. Merci pour votre confiance.</p>
 
-        <p>Nous avons bien reçu votre paiement. Nous vous remercions pour votre promptitude.</p>
-
+        <!-- PAIEMENT INFO -->
         <div class="paiement-info">
-            <h2>💳 Détails du Paiement</h2>
-
+            <h2>Détails du Paiement</h2>
             <div class="info-row">
-                <span class="label">Date de paiement :</span>
+                <span class="label">Date :</span>
                 <span class="value" th:text="${#temporals.format(datePaiement, 'dd/MM/yyyy')}">01/01/2025</span>
             </div>
-
             <div class="info-row">
-                <span class="label">Mode de paiement :</span>
+                <span class="label">Mode :</span>
                 <span class="value" th:text="${modePaiement}">Virement</span>
             </div>
-
             <div class="info-row" th:if="${paiement.memo}">
                 <span class="label">Référence :</span>
                 <span class="value" th:text="${paiement.memo}">REF-12345</span>
             </div>
         </div>
 
+        <!-- MONTANT -->
         <div class="montant">
-            💰 Montant Payé : <span th:text="${#numbers.formatDecimal(montant, 0, 2)} + ' €'">1,250.00 €</span>
+            Montant payé : <span th:text="${#numbers.formatDecimal(montant, 0, 2)} + ' €'">1 250,00 €</span>
         </div>
 
+        <!-- FACTURE ASSOCIEE -->
         <div class="facture-info" th:if="${facture}">
-            <h3>📋 Facture Associée</h3>
-
+            <h3>Facture associée</h3>
             <div class="info-row">
                 <span class="label">Numéro :</span>
                 <span class="value" th:text="${facture.numeroFacture}">FAC-001</span>
             </div>
-
             <div class="info-row">
                 <span class="label">Montant restant :</span>
                 <span class="value" th:text="${#numbers.formatDecimal(facture.montantRestant, 0, 2)} + ' €'">0,00 €</span>
             </div>
-
             <div class="info-row">
                 <span class="label">Statut :</span>
                 <span class="value" th:text="${facture.etat.libelle}">Payé</span>
             </div>
         </div>
 
-        <div style="background-color: #d1ecf1; border-left: 4px solid #17a2b8; padding: 15px; margin: 20px 0; border-radius: 4px;">
-            <h3 style="margin-top: 0; color: #0c5460;">ℹ️ Informations utiles :</h3>
-            <ul style="margin: 0; padding-left: 20px; color: #0c5460;">
-                <li>Ce paiement a été enregistré dans nos systèmes</li>
-                <li>Vous recevrez un reçu de paiement par email séparément</li>
-                <li>Conservez ce mail comme justificatif de paiement</li>
-            </ul>
+        <!-- ALERT -->
+        <div class="alert-box">
+            ℹ️ Ce paiement a été enregistré dans nos systèmes.<br>
+            Un reçu officiel vous sera transmis par email séparément.<br>
+            Conservez ce message comme justificatif.
         </div>
 
+        <!-- CTA -->
         <div style="text-align: center;">
             <a href="#" class="cta-button" th:href="${baseUrl + '/compte'}">
-                📊 Consulter mon compte
+                Consulter mon compte
             </a>
         </div>
 
-        <p>Merci de votre confiance,<br>
-            <strong>L'équipe YooYob ERP</strong></p>
+        <p>Cordialement,<br>
+            <strong>L’équipe YooYob ERP</strong></p>
     </div>
 
+    <!-- FOOTER -->
     <div class="footer">
-        <p>📧 Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
-        <p>💼 YooYob ERP - Solution de gestion d'entreprise</p>
-        <p>📞 Support client : support@yooyob.com</p>
+        <p>✉️ Cet email est généré automatiquement, merci de ne pas y répondre.</p>
+        <p>💼 YooYob ERP - Solution de gestion d’entreprise</p>
+        <p>📞 Support : <a href="mailto:support@yooyob.com">support@yooyob.com</a></p>
     </div>
 </div>
 </body>

@@ -265,12 +265,12 @@
         <img th:if="${logoPath}" th:src="${logoPath}" alt="Logo" class="logo" />
         <div class="company-info">
             <h1>YooYob ERP</h1>
-            <p><strong>123 Rue de l'Exemple</strong></p>
-            <p>75001 Paris, France</p>
-            <p>Tél: +33 1 23 45 67 89</p>
+            <p><strong>BP 12345, Yaoundé</strong></p>
+            <p>Cameroun</p>
+            <p>Tél: +237 6 70 12 34 56</p>
             <p>Email: contact@yooyob.com</p>
-            <p>SIRET: 123 456 789 00012</p>
-            <p>TVA: FR12345678901</p>
+            <p>RCCM: RC/YAO/2024/B/1234</p>
+            <p>NIU: M0123456789</p>
         </div>
     </div>
     <div class="header-right">
@@ -286,17 +286,17 @@
 <div class="client-info">
     <div class="client-left">
         <div class="client-box">
-            <h3>🏢 Facturé à</h3>
-            <p><strong th:text="${client.username}">Nom du Client</strong></p>
-            <p th:text="${client.adresse}">123 Rue du Client</p>
-            <p th:if="${client.email}">✉️ <span th:text="${client.email}">client@email.com</span></p>
-            <p th:if="${client.telephone}">📞 <span th:text="${client.telephone}">01 23 45 67 89</span></p>
-            <p th:if="${client.numeroTva}">TVA: <span th:text="${client.numeroTva}">FR12345678901</span></p>
+            <h3>Facturé à</h3>
+            <p><strong th:text="${client.username}">Société ABC SARL</strong></p>
+            <p th:text="${client.adresse}">Douala, Akwa</p>
+            <p th:if="${client.email}"><span th:text="${client.email}">abc.sarl@gmail.com</span></p>
+            <p th:if="${client.telephone}"><span th:text="${client.telephone}">+237 6 90 11 22 33</span></p>
+            <p th:if="${client.numeroTva}">NIU: <span th:text="${client.numeroTva}">M0987654321</span></p>
         </div>
     </div>
     <div class="client-right">
         <div class="facture-details">
-            <h3>📋 Détails de la Facture</h3>
+            <h3>Détails de la Facture</h3>
             <div class="detail-row">
                 <div class="detail-label">Statut:</div>
                 <div class="detail-value" th:text="${facture.etat.libelle}">Envoyé</div>
@@ -307,7 +307,7 @@
             </div>
             <div class="detail-row">
                 <div class="detail-label">Devise:</div>
-                <div class="detail-value" th:text="${facture.devise ?: 'EUR'}">EUR</div>
+                <div class="detail-value" th:text="${facture.devise ?: 'XAF'}">XAF</div>
             </div>
             <div class="detail-row" th:if="${facture.conditionsPaiement}">
                 <div class="detail-label">Conditions:</div>
@@ -330,15 +330,15 @@
     <tbody>
     <tr th:each="ligne : ${lignesFacture}" th:classappend="${ligne.isTaxLine} ? 'tax-line' : ''">
         <td>
-            <strong th:text="${ligne.nomProduit ?: ligne.description}">Description du produit</strong>
+            <strong th:text="${ligne.nomProduit ?: ligne.description}">Ordinateur portable Lenovo</strong>
             <div th:if="${ligne.description and ligne.nomProduit != ligne.description}"
                  style="font-size: 10px; color: #666; margin-top: 3px;"
-                 th:text="${ligne.description}">Détails supplémentaires</div>
+                 th:text="${ligne.description}">Core i5, 8Go RAM, 256Go SSD</div>
         </td>
-        <td th:text="${ligne.quantite}">1</td>
-        <td th:text="${#numbers.formatDecimal(ligne.prixUnitaire, 0, 2)} + ' €'">100,00 €</td>
-        <td th:text="${#numbers.formatDecimal(ligne.credit, 0, 2)} + ' €'">100,00 €</td>
-        <td th:text="${#numbers.formatDecimal(ligne.montantTotal, 0, 2)} + ' €'">100,00 €</td>
+        <td th:text="${ligne.quantite}">2</td>
+        <td th:text="${#numbers.formatDecimal(ligne.prixUnitaire, 0, 2)} + ' FCFA'">250 000 FCFA</td>
+        <td th:text="${#numbers.formatDecimal(ligne.credit, 0, 2)} + ' FCFA'">500 000 FCFA</td>
+        <td th:text="${#numbers.formatDecimal(ligne.montantTotal, 0, 2)} + ' FCFA'">500 000 FCFA</td>
     </tr>
     </tbody>
 </table>
@@ -347,15 +347,15 @@
     <table>
         <tr>
             <td class="label">Sous-total HT:</td>
-            <td class="value" th:text="${#numbers.formatDecimal(facture.montantHT, 0, 2)} + ' €'">1 000,00 €</td>
+            <td class="value" th:text="${#numbers.formatDecimal(facture.montantHT, 0, 2)} + ' FCFA'">1 000 000 FCFA</td>
         </tr>
         <tr>
-            <td class="label">TVA:</td>
-            <td class="value" th:text="${#numbers.formatDecimal(facture.montantTVA, 0, 2)} + ' €'">200,00 €</td>
+            <td class="label">TVA (19,25%):</td>
+            <td class="value" th:text="${#numbers.formatDecimal(facture.montantTVA, 0, 2)} + ' FCFA'">192 500 FCFA</td>
         </tr>
         <tr class="total-final">
             <td class="label">TOTAL TTC:</td>
-            <td class="value" th:text="${#numbers.formatDecimal(facture.montantTotal, 0, 2)} + ' €'">1 200,00 €</td>
+            <td class="value" th:text="${#numbers.formatDecimal(facture.montantTotal, 0, 2)} + ' FCFA'">1 192 500 FCFA</td>
         </tr>
     </table>
 </div>
@@ -363,23 +363,23 @@
 <div class="clearfix"></div>
 
 <div class="payment-info">
-    <h3>💳 Informations de Paiement</h3>
-    <p><strong>Montant restant dû:</strong> <span th:text="${#numbers.formatDecimal(facture.montantRestant, 0, 2)} + ' €'">1 200,00 €</span></p>
-    <p><strong>IBAN:</strong> FR76 1234 5678 9012 3456 7890 123</p>
-    <p><strong>BIC:</strong> EXAMPLEFR</p>
+    <h3>Informations de Paiement</h3>
+    <p><strong>Montant restant dû:</strong> <span th:text="${#numbers.formatDecimal(facture.montantRestant, 0, 2)} + ' FCFA'">1 192 500 FCFA</span></p>
+    <p><strong>Banque:</strong> Afriland First Bank Cameroun</p>
+    <p><strong>RIB:</strong> 10001 00020 12345678901 89</p>
     <p><strong>Référence à mentionner:</strong> <span th:text="${facture.numeroFacture}">FAC-001</span></p>
 </div>
 
 <div class="notes" th:if="${facture.notes}">
-    <h3>📝 Notes</h3>
-    <p th:text="${facture.notes}">Notes supplémentaires sur la facture</p>
+    <h3>Notes</h3>
+    <p th:text="${facture.notes}">Merci de votre confiance.</p>
 </div>
 
 <div class="notes">
-    <h3>ℹ️ Conditions Générales</h3>
+    <h3>Conditions Générales</h3>
     <p>• Paiement à réception de facture, sauf conditions particulières convenues par écrit.</p>
-    <p>• En cas de retard de paiement, des pénalités de 3 fois le taux légal seront appliquées.</p>
-    <p>• Tout retard de paiement entraîne l'exigibilité d'une indemnité forfaitaire de 40€ pour frais de recouvrement.</p>
+    <p>• En cas de retard de paiement, des pénalités de 2% par mois seront appliquées.</p>
+    <p>• Toute contestation doit être signalée dans un délai de 7 jours.</p>
     <p>• Nos prix s'entendent hors taxes sauf mention contraire.</p>
 </div>
 
