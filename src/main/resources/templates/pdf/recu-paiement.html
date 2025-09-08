@@ -274,7 +274,7 @@
 </div>
 
 <div class="montant-paye">
-    💰 Montant Payé: <span th:text="${#numbers.formatDecimal(paiement.montant, 0, 2)} + ' €'">1 200,00 €</span>
+    💰 Montant Payé: <span th:text="${#numbers.formatDecimal(paiement.montant, 0, 2)} + ' FCFA'">1 200,00 FCFA</span>
 </div>
 
 <div class="facture-info" th:if="${facture}">
@@ -293,8 +293,8 @@
         <tr>
             <td th:text="${facture.numeroFacture}">FAC-001</td>
             <td th:text="${#temporals.format(facture.dateFacturation, 'dd/MM/yyyy')}">15/12/2024</td>
-            <td th:text="${#numbers.formatDecimal(facture.montantTotal, 0, 2)} + ' €'">1 500,00 €</td>
-            <td th:text="${#numbers.formatDecimal(facture.montantRestant, 0, 2)} + ' €'">300,00 €</td>
+            <td th:text="${#numbers.formatDecimal(facture.montantTotal, 0, 2)} + ' FCFA'">1 500,00 FCFA</td>
+            <td th:text="${#numbers.formatDecimal(facture.montantRestant, 0, 2)} + ' FCFA'">300,00 FCFA</td>
             <td>
                 <span th:text="${facture.etat.libelle}"
                       th:style="${facture.etat.name() == 'PAYE'} ? 'color:#28a745;font-weight:bold;' :

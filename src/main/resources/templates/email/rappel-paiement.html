@@ -199,7 +199,7 @@
         </div>
 
         <div class="montant">
-            Montant À Régler : <span th:text="${#numbers.formatDecimal(montantRestant, 0, 2)} + ' €'">1,250.00 €</span>
+            Montant À Régler : <span th:text="${#numbers.formatDecimal(montantRestant, 0, 2)} + ' FCFA'">1,250.00 FCFA</span>
         </div>
 
         <div class="echeance-info" th:classappend="${joursDeRetard != null and joursDeRetard > 0} ? 'depassee' : (${joursAvantEcheance != null and joursAvantEcheance <= 3} ? 'proche' : '')">

@@ -176,7 +176,7 @@
 
         <!-- MONTANT -->
         <div class="montant">
-            Montant payé : <span th:text="${#numbers.formatDecimal(montant, 0, 2)} + ' €'">1 250,00 €</span>
+            Montant payé : <span th:text="${#numbers.formatDecimal(montant, 0, 2)} + ' FCFA'">1 250,00 FCFA</span>
         </div>
 
         <!-- FACTURE ASSOCIEE -->
@@ -188,7 +188,7 @@
             </div>
             <div class="info-row">
                 <span class="label">Montant restant :</span>
-                <span class="value" th:text="${#numbers.formatDecimal(facture.montantRestant, 0, 2)} + ' €'">0,00 €</span>
+                <span class="value" th:text="${#numbers.formatDecimal(facture.montantRestant, 0, 2)} + ' FCFA'">0,00 FCFA</span>
             </div>
             <div class="info-row">
                 <span class="label">Statut :</span>
