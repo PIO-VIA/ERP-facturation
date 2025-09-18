@@ -26,6 +26,26 @@ public interface PdfService {
     String generateAndSaveFacturePdf(UUID factureId);
 
     /**
+     * Génère le PDF d'un devis
+     */
+    byte[] generateDevisPdf(UUID devisId);
+
+    /**
+     * Génère et sauvegarde le PDF d'un devis
+     */
+    String generateDevisPdf(com.yooyob.erp.model.entity.Devis devis);
+
+    /**
+     * Génère le PDF d'une facture d'avoir
+     */
+    byte[] generateFactureAvoirPdf(UUID avoirId);
+
+    /**
+     * Génère et sauvegarde le PDF d'une facture d'avoir
+     */
+    String generateFactureAvoirPdf(com.yooyob.erp.model.entity.FactureAvoir factureAvoir);
+
+    /**
      * Génère le PDF d'un reçu de paiement
      */
     byte[] generateRecuPaiementPdf(UUID paiementId);

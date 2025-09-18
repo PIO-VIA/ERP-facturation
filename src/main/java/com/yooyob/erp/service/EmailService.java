@@ -80,4 +80,14 @@ public interface EmailService {
      * Vérifie si un email est valide
      */
     boolean isValidEmail(String email);
+
+    /**
+     * Envoie un email de devis
+     */
+    void sendDevisEmail(UUID devisId, String clientEmail);
+
+    /**
+     * Envoie un email de facture d'avoir
+     */
+    void sendFactureAvoirEmail(UUID avoirId, String clientEmail);
 }

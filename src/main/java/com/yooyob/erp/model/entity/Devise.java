@@ -34,9 +34,43 @@ public class Devise {
     @Column("symbole")
     private String symbole;
 
+    @NotBlank(message = "Le code ISO est obligatoire")
+    @Column("code_iso")
+    private String codeIso;
+
     @Column("actif")
     @Builder.Default
     private Boolean actif = true;
+
+    @Column("devise_base")
+    @Builder.Default
+    private Boolean deviseBase = false;
+
+    @Column("taux_change_actuel")
+    @Builder.Default
+    private BigDecimal tauxChangeActuel = BigDecimal.ONE;
+
+    @Column("derniere_mise_a_jour_taux")
+    private LocalDateTime derniereMiseAJourTaux;
+
+    @Column("source_taux_auto")
+    private String sourceTauxAuto;
+
+    @Column("precision_decimale")
+    @Builder.Default
+    private Integer precisionDecimale = 2;
+
+    @Column("position_symbole")
+    @Builder.Default
+    private String positionSymbole = "AVANT"; // AVANT, APRES
+
+    @Column("separateur_milliers")
+    @Builder.Default
+    private String separateurMilliers = " ";
+
+    @Column("separateur_decimal")
+    @Builder.Default
+    private String separateurDecimal = ",";
 
     @Column("unite_monetaire")
     private String uniteMonetaire;
